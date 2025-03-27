@@ -17,7 +17,8 @@ The aim of the project is to develop a simple AI-driven solution for analysing r
     2. Batch Classification with ResNet
 
 4️⃣ **Part #4 - Combining Insights**
-    Did my own interpetaion with building a "chat-sql" with streamlit
+    Did my own interpetaion with building a "chat-sql" with streamlit.
+    This is a chat where you are able to ask "sql style" questions regarding the dataset.
     ***usage:***
     To use the application, execute the `app.py` file using the Streamlit CLI. Make sure you have Streamlit installed before running the application. Run the following command in your terminal:
    ```
