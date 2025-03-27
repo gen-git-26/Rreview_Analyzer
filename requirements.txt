@@ -5,3 +5,7 @@ seaborn
 scikit-learn
 torch
 transformers
+streamlit
+langchain
+langchain-community
+langchain_groq
