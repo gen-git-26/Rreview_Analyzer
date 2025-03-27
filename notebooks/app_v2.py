@@ -37,7 +37,7 @@ def configure_db():
 db = configure_db()
 
 # Initialize LLM model
-llm = ChatGroq(groq_api_key=api_key, model_name="Llama3-8b-8192", streaming=True)
+llm = ChatGroq(groq_api_key=api_key, model_name="gemma2-9b-it", streaming=True)
 
 # Toolkit & Agent
 toolkit = SQLDatabaseToolkit(db=db, llm=llm)

@@ -11,26 +11,25 @@ from sqlalchemy import create_engine
 import sqlite3
 from langchain_groq import ChatGroq
 
-# 🎨 **Streamlit UI Configuration**
-st.set_page_config(page_title="LangChain SQL Chat", page_icon="🦜", layout="wide")
-st.title("Chat with SQL DB")
 
-# 🔑 **API Key Input**
+st.set_page_config(page_title="LangChain SQL Chat", page_icon="🦜", layout="wide")
+
+#  **API Key Input**
 st.sidebar.title("🔧 Settings")
 api_key = st.sidebar.text_input("🗝️ GRoq API Key", type="password")
-model_choice = st.sidebar.selectbox("🤖 Choose LLM Model", ["Llama3-8b-8192","gemma2-9b-it", "Mixtral-8x7b"])
+model_choice = st.sidebar.selectbox("🤖 Choose LLM Model", ["Llama3-8b-8192", "Mixtral-8x7b"])
 if not api_key:
     st.warning("Please enter your GRoq API Key.")
     st.stop()
 
-# 📂 **Database Selection**
+#  **Database Selection (Static for Now)**
 dbfilepath = (Path(__file__).parent / "csv_to_sql/reviews.db").absolute()
 
 if not dbfilepath.exists():
     st.error(f"❌ Database file not found: {dbfilepath}")
     st.stop()
 
-# 🛠️ **Database Connection**
+#  **Database Connection**
 @st.cache_resource(ttl="2h")
 def configure_db():
     creator = lambda: sqlite3.connect(str(dbfilepath))
@@ -38,10 +37,10 @@ def configure_db():
 
 db = configure_db()
 
-# 🤖 **LLM Model Initialization**
+#  **LLM Model Initialization**
 llm = ChatGroq(groq_api_key=api_key, model_name=model_choice, streaming=True)
 
-# 🏗️ **SQL Agent & Toolkit**
+#  **SQL Agent & Toolkit**
 toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 agent = create_sql_agent(
     llm=llm,
@@ -50,22 +49,13 @@ agent = create_sql_agent(
     agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION
 )
 
-# # 📊 **Show Database Schema**
-# st.sidebar.subheader("🗄️ Database Information")
-# with st.sidebar.expander("📌 View Table Names", expanded=False):
-#     tables = db.run("SELECT name FROM sqlite_master WHERE type='table';")
-#     st.write(tables)
+#  **Show Database Schema**
+st.sidebar.subheader("🗄️ Database Information")
+with st.sidebar.expander("📌 View Table Names", expanded=False):
+    tables = db.run("SELECT name FROM sqlite_master WHERE type='table';")
+    st.write(tables)
 
-# 🏷️ **Show Column Names for the 'reviews' Table**
-st.sidebar.subheader("📌 Columns in 'reviews' Table")
-columns = [
-    "authorName", "googleMapsPlaceId", "placeAddress", "placeName", "placeUrl",
-    "provider", "reviewDate", "reviewRating", "reviewText", "reviewTitle",
-    "reviewUrl", "sentiment"
-]
-st.sidebar.write("\n".join([f"🔹 `{col}`" for col in columns]))
-
-# 📜 **Chat History**
+#  **Chat History**
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
 
@@ -73,7 +63,7 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.write(msg["content"])
 
-# 📝 **User Input**
+#  **User Input**
 user_query = st.chat_input("🔍 Ask something about the database...")
 
 if user_query:
@@ -81,7 +71,7 @@ if user_query:
     with st.chat_message("user"):
         st.write(user_query)
 
-    # ⏳ Track Query Execution Time
+    #  Track Query Execution Time
     start_time = time.time()
     
     with st.chat_message("assistant"):
@@ -89,7 +79,7 @@ if user_query:
         response = agent.run(user_query, callbacks=[streamlit_callback])
         execution_time = time.time() - start_time  # ⏱️ End Time
 
-        # 📊 **Display Query Execution Time**
+        #  **Display Query Execution Time**
         st.caption(f"⏳ Query executed in {execution_time:.2f} seconds")
         
         # 📋 **Check if response is tabular**
@@ -101,7 +91,7 @@ if user_query:
 
         st.session_state.messages.append({"role": "assistant", "content": response})
 
-# 🎯 **Query History & Retry**
+#  **Query History & Retry**
 st.sidebar.subheader("📜 Query History")
 if len(st.session_state.messages) > 1:
     for i, msg in enumerate(st.session_state.messages[::-1]):  
