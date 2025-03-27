@@ -24,7 +24,8 @@ For the classification of images, I have used two methodologies:
     Did my own interpetaion with building a "chat-sql" with streamlit.
     This is a chat where you are able to ask "sql style" questions regarding the dataset.
     ***usage:***
-    To use the application, execute the `app.py` file using the Streamlit CLI. Make sure you have Streamlit installed before running the application. 
+    To use the application, execute the `app.py` file using the Streamlit CLI. 
+    Make sure you have Streamlit installed before running the application. 
     Run the following command in your terminal:
 
    ```
