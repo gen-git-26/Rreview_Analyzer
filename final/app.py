@@ -18,7 +18,7 @@ st.title("Chat with SQL DB")
 # 🔑 **API Key Input**
 st.sidebar.title("🔧 Settings")
 api_key = st.sidebar.text_input("🗝️ GRoq API Key", type="password")
-model_choice = st.sidebar.selectbox("🤖 Choose LLM Model", ["Llama3-8b-8192","gemma2-9b-it", "Mixtral-8x7b"])
+model_choice = st.sidebar.selectbox("🤖 Choose LLM Model", ["gemma2-9b-it","llama3-8b-8192", "deepseek-r1-distill-qwen-32b"])
 if not api_key:
     st.warning("Please enter your GRoq API Key.")
     st.stop()
